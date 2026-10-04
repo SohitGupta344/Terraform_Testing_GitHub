@@ -27,6 +27,16 @@ parameters:
     type: boolean
     default: true
 
+  - name: approval
+    displayName: Run approval
+    type: boolean
+    default: true
+
+  - name: apply
+    displayName: Run apply
+    type: boolean
+    default: true
+
 stages:
   - stage: TFLint
     displayName: TFLint
@@ -88,6 +98,50 @@ stages:
     displayName: terraform validate
     jobs:
       - job: 
+        displayName: terraform_init_validate_plan
+        steps:
+        - task: TerraformTask@5
+          displayName: terraform init
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            backendServiceArm: 'ericsson'
+            backendAzureRmResourceGroupName: 'sohit-rg'
+            backendAzureRmStorageAccountName: 'sohittfstate001'
+            backendAzureRmContainerName: 'tfstate'
+            backendAzureRmKey: 'sohit.terraform.tfstate'''
+        - task: TerraformTask@5
+          displayName: validate
+          inputs:
+            provider: 'azurerm'
+            command: 'validate'
+        - task: TerraformTask@5
+          displayName: plan
+          inputs:
+            provider: 'azurerm'
+            command: 'plan'
+
+  - stage: approval
+    condition: ${{ parameters.approval }}
+    displayName: approval
+    pool: server
+    jobs:
+      - job: 
+        displayName: approval
+        steps:
+        - task: ManualValidation@1
+          displayName: approval
+          inputs:
+            notifyUsers: 'sohitg89@gmail.com'
+            approvers: 'sohitg89@gmail.com'
+            instructions: 'Please check and approve'
+
+  - stage: apply
+    condition: ${{ parameters.apply }}
+    displayName: apply
+    dependsOn: approval
+    jobs:
+      - job: 
         displayName: terraform init
         steps:
         - task: TerraformTask@5
@@ -100,3 +154,12 @@ stages:
             backendAzureRmStorageAccountName: 'sohittfstate001'
             backendAzureRmContainerName: 'tfstate'
             backendAzureRmKey: 'sohit.terraform.tfstate'''
+        - task: TerraformTask@5
+          displayName: apply
+          inputs:
+            provider: 'azurerm'
+            command: 'apply'
+            
+    
+
+  
