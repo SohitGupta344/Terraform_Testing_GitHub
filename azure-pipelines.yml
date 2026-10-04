@@ -1,0 +1,17 @@
+pool: Default
+
+trigger:
+-  main
+- feature/*
+
+stages:
+  - stage: tflint
+    displayName: tflint
+    jobs:
+      - job: tflint
+        steps:
+        - task: PowerShell@2
+          displayName: tflint
+          inputs:
+            targetType: 'inline'
+            script: 'tflint --recursive'
