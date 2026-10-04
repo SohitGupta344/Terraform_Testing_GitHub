@@ -22,6 +22,11 @@ parameters:
     type: boolean
     default: true
 
+  - name: terraform_validate
+    displayName: Run terraform validate
+    type: boolean
+    default: true
+
 stages:
   - stage: TFLint
     displayName: TFLint
@@ -78,3 +83,21 @@ stages:
               targetType: inline
               script: |
                 checkov -d . --framework terraform
+  - stage: terraform_validate
+    condition: ${{ parameters.terraform_validate }}
+    dependsOn: []
+    displayName: terraform validate
+    jobs:
+      - job: 
+        displayName: terraform init
+        steps:
+        - task: TerraformTask@5
+          displayName: terraform init
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            backendServiceArm: 'ericsson'
+            backendAzureRmResourceGroupName: 'sohit-rg'
+            backendAzureRmStorageAccountName: 'sohittfstate001'
+            backendAzureRmContainerName: 'tfstate'
+            backendAzureRmKey: 'sohit.terraform.tfstate'''
