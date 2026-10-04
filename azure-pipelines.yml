@@ -85,7 +85,6 @@ stages:
                 checkov -d . --framework terraform
   - stage: terraform_validate
     condition: ${{ parameters.terraform_validate }}
-    dependsOn: []
     displayName: terraform validate
     jobs:
       - job: 
