@@ -22,7 +22,18 @@ stages:
       - job: tfsec
         steps:
         - task: PowerShell@2
-          displayName: sec
+          displayName: tfsec
           inputs:
             targetType: 'inline'
             script: 'tfsec .'
+
+  - stage: checkov
+    displayName: checkov
+    jobs:
+      - job: checkov
+        steps:
+        - task: PowerShell@2
+          displayName: ckeckov
+          inputs:
+            targetType: 'inline'
+            script: 'checkov -d .'
