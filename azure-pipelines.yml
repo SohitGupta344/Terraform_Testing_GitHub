@@ -121,6 +121,7 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'plan'
+            environmentServiceNameAzureRM: 'ericsson'
 
   - stage: approval
     condition: ${{ parameters.approval }}
