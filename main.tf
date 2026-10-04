@@ -12,7 +12,7 @@ terraform {
     resource_group_name  = "sohit-rg"
     storage_account_name = "sohittfstate001"
     container_name       = "tfstate"
-    key                  = "terraform.tfstate"
+    key                  = "sohit.terraform.tfstate"
   }
 }
 
