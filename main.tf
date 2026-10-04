@@ -14,10 +14,11 @@ terraform {
     container_name       = "tfstate"
     key                  = "terraform.tfstate"
   }
-
+}
 
 provider "azurerm" {
   features {}
+
   use_oidc = true
 }
 
