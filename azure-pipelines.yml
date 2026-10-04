@@ -139,7 +139,7 @@ stages:
             instructions: 'Please check and approve'
 
   - stage: apply
-    condition: ${{ parameters.apply }}
+    condition: and(${{ parameters.apply }}, succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
     displayName: apply
     dependsOn: approval
     jobs:
