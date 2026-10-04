@@ -1,39 +1,80 @@
+trigger:
+  branches:
+    include:
+      - main
+      - feature/*
+
 pool: Default
 
-trigger:
--  main
-- feature/*
+parameters:
+  - name: tflint
+    displayName: Run TFLint
+    type: boolean
+    default: true
+
+  - name: tfsec
+    displayName: Run tfsec
+    type: boolean
+    default: true
+
+  - name: checkov
+    displayName: Run Checkov
+    type: boolean
+    default: true
 
 stages:
-  - stage: tflint
-    displayName: tflint
-    jobs:
-      - job: tflint
-        steps:
-        - task: PowerShell@2
-          displayName: tflint
-          inputs:
-            targetType: 'inline'
-            script: 'tflint --recursive'
+  - stage: TFLint
+    displayName: TFLint
+    condition: ${{ parameters.tflint }}
+    dependsOn: []
 
-  - stage: tfsec
+    jobs:
+      - job: TFLint
+        displayName: Run TFLint
+
+        steps:
+          - task: PowerShell@2
+            displayName: Run TFLint
+            inputs:
+              targetType: inline
+              script: |
+
+                Write-Host "Current Directory:"
+                pwd
+
+                tflint --init
+                tflint --recursive
+
+  - stage: TFSEC
     displayName: tfsec
-    jobs:
-      - job: tfsec
-        steps:
-        - task: PowerShell@2
-          displayName: tfsec
-          inputs:
-            targetType: 'inline'
-            script: 'tfsec .'
+    condition: ${{ parameters.tfsec }}
+    dependsOn: []
 
-  - stage: checkov
-    displayName: checkov
     jobs:
-      - job: checkov
+      - job: TFSEC
+        displayName: Run tfsec
+
         steps:
-        - task: PowerShell@2
-          displayName: ckeckov
-          inputs:
-            targetType: 'inline'
-            script: 'checkov -d .'
+          - task: PowerShell@2
+            displayName: Run tfsec
+            inputs:
+              targetType: inline
+              script: |
+                tfsec .
+
+  - stage: Checkov
+    displayName: Checkov
+    condition: ${{ parameters.checkov }}
+    dependsOn: []
+
+    jobs:
+      - job: Checkov
+        displayName: Run Checkov
+
+        steps:
+          - task: PowerShell@2
+            displayName: Run Checkov
+            inputs:
+              targetType: inline
+              script: |
+                checkov -d . --framework terraform
