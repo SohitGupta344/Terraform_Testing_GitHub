@@ -15,3 +15,14 @@ stages:
           inputs:
             targetType: 'inline'
             script: 'tflint --recursive'
+
+  - stage: tfsec
+    displayName: tfsec
+    jobs:
+      - job: tfsec
+        steps:
+        - task: PowerShell@2
+          displayName: sec
+          inputs:
+            targetType: 'inline'
+            script: 'tfsec .'
