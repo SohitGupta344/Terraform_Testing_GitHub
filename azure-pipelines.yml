@@ -1,8 +1,9 @@
 trigger:
   branches:
     include:
-      - main
-      - feature/*
+      # - main
+      # - feature/*
+      - none
 
 pool: Default
 
