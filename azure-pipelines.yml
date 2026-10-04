@@ -110,7 +110,7 @@ stages:
             backendAzureRmResourceGroupName: 'sohit-rg'
             backendAzureRmStorageAccountName: 'sohittfstate001'
             backendAzureRmContainerName: 'tfstate'
-            backendAzureRmKey: 'sohit.terraform.tfstate'''
+            backendAzureRmKey: 'sohit.terraform.tfstate'
         - task: TerraformTask@5
           displayName: validate
           inputs:
@@ -155,7 +155,7 @@ stages:
             backendAzureRmResourceGroupName: 'sohit-rg'
             backendAzureRmStorageAccountName: 'sohittfstate001'
             backendAzureRmContainerName: 'tfstate'
-            backendAzureRmKey: 'sohit.terraform.tfstate'''
+            backendAzureRmKey: 'sohit.terraform.tfstate'
         - task: TerraformTask@5
           displayName: apply
           inputs:
